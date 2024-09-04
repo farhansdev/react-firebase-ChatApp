@@ -39,7 +39,7 @@ const Login = () => {
         icon: 'success',
         confirmButtonText: 'Okay'
       })
-      navigate('/Dashboard');
+      navigate('/userlist');
       } catch (error) {
         console.error(error.message);
         Swal.fire({
