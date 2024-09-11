@@ -1,54 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { auth } from '../database/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-// import Loading from './loading';
 
 
 const Login = () => {
 
   const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  // const [loading, setLoading] = useState(true);
- 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 2000); 
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // if (loading) {
-  //   return <Loading />
-  // }
-
-
-  const handleLogin = async (e) => {
+  function handleLogin(e) {
+  setIsLoading(true)
     e.preventDefault();
-     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email, password)
+      .then(async (response) => {
+      const uid = response.user.uid
+      localStorage.setItem("userId", uid)
+      setIsLoading(false)
       console.log("User logged in successfully!");
       Swal.fire({
         title: 'User  Succesfuly Login!',
-        text: 'Do you want to continue',
         icon: 'success',
-        confirmButtonText: 'Okay'
       })
-      navigate('/userlist');
-      } catch (error) {
-        console.error(error.message);
+       navigate('/chats')
+    })
+      .catch((error) => {
         Swal.fire({
           title: 'Something Went Wrong!',
-          text: 'Do you want to continue',
+          text: error.message,
           icon: 'error',
-          confirmButtonText: 'Okay'
         })
-     }
+        setIsLoading(false)
+      })
   };
 
   return (

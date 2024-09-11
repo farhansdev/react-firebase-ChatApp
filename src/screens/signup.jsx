@@ -6,44 +6,43 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../database/firebase.config';
 import { setDoc, doc } from 'firebase/firestore';
 
+
 function Signup() {
 
   const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
- const handleSignup = async (e) => {
+
+ function handleSignup(e) {
+  setIsLoading(true)
   e.preventDefault();
-  try {
-    await createUserWithEmailAndPassword(auth, email, password)
-    const user = auth.currentUser;
-    console.log(user, "user")
-    if(user) {
-      await setDoc(doc(db, 'users', user.uid), {
-        name: name,
-        email: email,
-        password: password
-        });
-    }
-    console.log("User Succesfuly Registerd!");
-    // window.location.href = "/Login";
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(async (response) => {
+      const uid = response.user.uid
+      const userData = { name, email, uid }
+      localStorage.setItem("userId", response.user.uid)
+      await setDoc(doc(db, 'users', uid), userData)
+      console.log("User Succesfuly Registerd!");
     Swal.fire({
       title: 'User  Succesfuly Registerd!',
-      text: 'Do you want to continue',
       icon: 'success',
-      confirmButtonText: 'Okay'
     })
     navigate('/Login')
-  } catch (error) {
+    setIsLoading(false)
+    })
+  .catch((error) => {
     console.log(error.message);
     Swal.fire({
       title: 'Something Went Wrong!',
-      text: 'Do you want to continue',
+      text: error.message,
       icon: 'error',
-      confirmButtonText: 'Okay'
     })
-  }
+    setIsLoading(false)
+  })
   }
 
   return (

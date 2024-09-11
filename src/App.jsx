@@ -2,20 +2,27 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Loading from "./screens/loading";
 import Login from "./screens/login";
 import Signup from "./screens/signup";
-// import Dashboard from "./screens/dashboard";
-import UserList from "./dashboard/chatlist";
-import ChatScreen from "./dashboard/chatscreen";
+// import Home from "./dashboard/chatlist";
+import Navbar from "./dashboard/navbar";
+import StatusScreen from "./dashboard/status";
+import Chat from "./dashboard/chats";
 import "./index.css"
 
 export default function App() {
 
   const router = createBrowserRouter([
-    { path: '/', element: <Loading /> },
-    { path: '/login', element: <Login /> },
+    { path: '/', element: <Login /> },
+    { path: '/loading', element: <Loading /> },
     { path: '/signup', element: <Signup /> },
-    { path: '/chatscreen', element: <ChatScreen /> }, 
-    { path: '/userlist', element: <UserList /> }, 
+    // { path: '/chatlist', element: <Home /> }, 
+    // { path: '/chatscreen', element: <Chat /> }, 
+    { path: '/navbar', element: <Navbar /> }, 
+    { path: '/status', element: <StatusScreen /> },
+    { path: '/chats', element: <Chat /> }
   ]);
 
-  return <RouterProvider router={router} />
-}
+  return (
+  <>
+  <RouterProvider router={router} />
+  </>
+)}

@@ -7,10 +7,14 @@ const Loading = () => {
   const navigate = useNavigate();
 
   useEffect(()=> {
-    setTimeout(()=> {
-    navigate('/Login');
-    }, 3000)
+     checkUser()
   }, [])
+
+  const checkUser = async () => {
+    const userId = await localStorage.getItem("userId");
+    if(userId !== null) navigate('/chatlist')
+      else navigate('/login')
+  }
  
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
